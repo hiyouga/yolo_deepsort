@@ -43,7 +43,6 @@ class VideoDetector:
                  win_size=None,
                  overlap=0.15,
                  tracker=None,
-                 action_id=None,
                  half=False):
         self.thickness = thickness
         self.skip_frames = skip_frames
@@ -65,7 +64,6 @@ class VideoDetector:
                                             half=half)
 
         self.tracker = tracker
-        self.action_id = action_id
 
     def detect(self, video_path,
                output_path=None,
@@ -107,11 +105,12 @@ class VideoDetector:
         curr_fps = 0
         fps = "FPS: ??"
         prev_time = time.time()
+        start_time = time.time()
 
         hold_detections = None
-        actions = []
 
         frames = 0
+        total_frames = 0
         try:
             while fvs.more():
                 frame = fvs.read()
@@ -140,15 +139,8 @@ class VideoDetector:
 
                         detections = self.tracker.update(boxs.float(), confidences, frame, class_ids)
 
-                        if self.action_id is not None:
-                            actions = self.action_id.update(detections)
-                        else:
-                            actions = []
-
                     hold_detections = detections
                     frames = 0
-                else:
-                    actions = []
 
                 if hold_detections is not None:
                     if self.tracker is not None:
@@ -156,7 +148,8 @@ class VideoDetector:
                                                                                              hold_detections,
                                                                                              only_rect=False)
                     else:
-                        image, plane, plane_mask = self.label_drawer.draw_labels(frame, hold_detections,
+                        image, plane, plane_mask = self.label_drawer.draw_labels(frame, 
+                                                                                 hold_detections,
                                                                                  only_rect=False)
                 else:
                     image, plane, plane_mask = frame, None, None
@@ -165,6 +158,7 @@ class VideoDetector:
                 result = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 frames += 1
+                total_frames += 1
 
                 curr_time = time.time()
                 exec_time = curr_time - prev_time
@@ -188,7 +182,10 @@ class VideoDetector:
 
                 if isOutput:
                     out.write(result)
-                yield result, hold_detections, actions
+
+                video_time = total_frames / video_fps
+                real_time = time.time() - start_time
+                yield result, hold_detections, video_time, real_time
 
                 if real_show:
                     if cv2.waitKey(1) & 0xFF == ord('q'):

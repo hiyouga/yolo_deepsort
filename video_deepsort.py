@@ -30,10 +30,11 @@ if __name__ == '__main__':
                                    tracker=tracker,
                                    half=True)
 
-    for image, detections, _ in video_detector.detect('data/test.flv',
-                                                      output_path='data/output.ts',
-                                                      real_show=False,
-                                                      skip_secs=0):
+    for image, detections, video_time, real_time in video_detector.detect('data/test.flv',
+                                                                          output_path='data/output.ts',
+                                                                          real_show=False,
+                                                                          skip_secs=0):
         # print(image)
-        print(detections)
+        # print(detections)
+        print(video_time, real_time)
         pass
