@@ -1,6 +1,5 @@
 from abc import abstractmethod, ABC
-
-from action.orbit import Orbit
+from .orbit import Orbit
 
 
 class Action:

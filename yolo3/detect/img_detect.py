@@ -21,7 +21,6 @@ from yolo3.utils.model_build import non_max_suppression, rescale_boxes, xywh2p1p
 
 def scale(image, shape, max_size):
     h, w, _ = shape
-    # 按比例缩放
     if w > h:
         image = resize(image, (int(h * max_size / w), max_size))
     else:
@@ -34,7 +33,6 @@ def scale(image, shape, max_size):
 
 
 class ImageDetector:
-    """图像检测器，只检测单张图片"""
 
     def __init__(self, model, class_path, thickness=2,
                  thres=0.5,
@@ -102,7 +100,6 @@ class ImageDetector:
             offsets = []
             for x in range(0, w, win_width):
                 for y in range(0, h, win_height):
-                    # 截取窗口大小的图像，再加上一些重叠区域
                     img_sub = img[y:y + win_height + overlap_y, x:x + win_width + overlap_x]
                     truncated_images_ori_size.append((img_sub.shape[0], img_sub.shape[1]))
 
@@ -154,7 +151,6 @@ class ImageDetector:
 
 
 class ImageFolderDetector:
-    """图像文件夹检测器，检测一个文件夹中的所有图像"""
 
     def __init__(self, model, class_path):
         self.model = model.eval()

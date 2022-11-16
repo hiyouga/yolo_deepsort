@@ -1,19 +1,13 @@
-import logging
-import time
-from functools import reduce
-import multiprocessing as mp
-from queue import Queue
-from threading import Thread
-
 import cv2
+import time
+import logging
 import numpy as np
-import torch
 from PIL import Image
+from functools import reduce
 from imutils.video import FileVideoStream
-
 from yolo3.detect.img_detect import ImageDetector
 from yolo3.utils.helper import load_classes
-from yolo3.utils.label_draw import LabelDrawer, plane_composite
+from yolo3.utils.label_draw import LabelDrawer
 from yolo3.utils.model_build import p1p2Toxywh
 
 
@@ -36,7 +30,6 @@ def _transform(frame):
 
 
 class VideoDetector:
-    """视频检测器，用于检测视频"""
 
     def __init__(self, model, class_path,
                  thickness=2,
@@ -123,7 +116,7 @@ class VideoDetector:
             while fvs.more():
                 frame = fvs.read()
 
-                #frame = cv2.resize(frame, (608, 608), interpolation=cv2.INTER_LINEAR)
+                # frame = cv2.resize(frame, (608, 608), interpolation=cv2.INTER_LINEAR)
                 # frame = cv2.hconcat([frame, frame, frame])
 
                 if frame is None:

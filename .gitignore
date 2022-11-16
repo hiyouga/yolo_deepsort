@@ -5,6 +5,7 @@ data/custom2
 data/*.flv
 data/*.yuv
 data/*.avi
+data/*.ts
 data/*.mp4
 data/*.data
 test/

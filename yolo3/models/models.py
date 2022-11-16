@@ -395,7 +395,7 @@ class Darknet(nn.Module):
 
 
 if __name__ == '__main__':
-    darknet = Darknet("E:\python\yolo3_deepsort\config\yolov4.cfg")
+    darknet = Darknet("..\..\config\yolov4.cfg")
     darknet.cuda()
     darknet.eval()
     x = torch.randn(1, 3, 416, 416).cuda()

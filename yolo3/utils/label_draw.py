@@ -6,7 +6,6 @@ import time
 
 
 def _get_statistic_info(detections, unique_labels, classes):
-    """获得统计信息"""
     statistic_info = {}
     for label in unique_labels:
         statistic_info[classes[int(label)]] = (
@@ -50,14 +49,13 @@ def draw_rects_and_labels(img, dets, colors, labels, thickness, font_size, font=
                          line_type=cv2.LINE_4,
                          bottomLeftOrigin=True)
         else:
-            text_size, _ = cv2.getTextSize(
-                labels[i], cv2.FONT_HERSHEY_COMPLEX_SMALL, font_size, 1)
+            text_size, _ = cv2.getTextSize(labels[i], cv2.FONT_HERSHEY_SIMPLEX, font_size, 1)
             font_w, font_h = text_size
             cv2.rectangle(img, (c1[0], max(0, int(c1[1] - 3 - 18 * font_size))),
                           (c1[0] + font_w, max(c1[1], int(3 + 18 * font_size))), colors[cls], -1)
             cv2.putText(img,
                         labels[i],
-                        (c1[0], max(c1[1] - 3, font_h)), cv2.FONT_HERSHEY_COMPLEX_SMALL, font_size,
+                        (c1[0], max(c1[1] - 3, font_h)), cv2.FONT_HERSHEY_SIMPLEX, font_size,
                         (0, 0, 0), 1)
     return img
 
@@ -70,7 +68,6 @@ def draw_single_img(img, detections, img_size,
                     scaled=False,
                     only_rect=False,
                     font_size=18):
-    """绘制单张图片"""
     statistic_info = {}
 
     # Detected something
@@ -96,7 +93,6 @@ def draw_single_img(img, detections, img_size,
                                   labels, thickness, font_size, font)
 
         if not only_rect and statistic:
-            # 绘制统计信息
             pass
 
         return img, None, None
@@ -107,16 +103,11 @@ def draw_single_img(img, detections, img_size,
 
 
 def plane_composite(img, plane, plane_mask):
-    """将背景层与绘制检测框的图层叠加"""
-
-    # 在原图中，把要添加的部分设置为黑色
     img_bg = cv2.bitwise_and(img, img, mask=plane_mask)
-
     return cv2.add(img_bg, plane)
 
 
 class LabelDrawer:
-    """绘制便签工具"""
 
     def __init__(self,
                  classes,

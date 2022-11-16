@@ -1,7 +1,5 @@
 import logging
 
-from action.action_Identify import ActionIdentify
-from action.actions import *
 from deep_sort import DeepSort
 from yolo3.detect.video_detect import VideoDetector
 from yolo3.models import Darknet
@@ -14,7 +12,6 @@ if __name__ == '__main__':
     model.load_darknet_weights("weights/yolov3-tiny.weights")
     model.to("cuda:0")
 
-    # 跟踪器
     tracker = DeepSort("weights/ckpt.t7",
                        min_confidence=1,
                        use_cuda=True,
@@ -24,18 +21,7 @@ if __name__ == '__main__':
                        max_dist=0.3,
                        max_age=30)
 
-    # Action Identify
-    # action_id = ActionIdentify(actions=[TakeOff(4, delta=(0, 1)),
-    #                                     Landing(4, delta=(2, 2)),
-    #                                     Glide(4, delta=(1, 2)),
-    #                                     FastCrossing(4, speed=0.2),
-    #                                     BreakInto(0, timeout=2)],
-    #                            max_age=30,
-    #                            max_size=8)
-
     video_detector = VideoDetector(model, "config/coco.names",
-                                   #font_path="font/Noto_Serif_SC/NotoSerifSC-Regular.otf",
-                                   #font_size=14,
                                    thickness=2,
                                    skip_frames=2,
                                    thres=0.5,
@@ -45,8 +31,9 @@ if __name__ == '__main__':
                                    half=True)
 
     for image, detections, _ in video_detector.detect('data/test.flv',
+                                                      output_path='data/output.ts',
                                                       real_show=False,
                                                       skip_secs=0):
-        print(image)
+        # print(image)
         print(detections)
         pass
