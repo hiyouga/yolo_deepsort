@@ -85,7 +85,7 @@ class VideoDetector:
 
         total_frames = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
         skip_frames = int(skip_secs) * video_fps
-        if skip_secs > total_frames:
+        if skip_frames > total_frames:
             print("Can't skip over total video!")
         else:
             vid.set(cv2.CAP_PROP_POS_FRAMES, skip_frames)
@@ -107,13 +107,15 @@ class VideoDetector:
         prev_time = time.time()
         start_time = time.time()
 
-        hold_detections = None
+        hold_detections = []
 
         frames = 0
         total_frames = 0
         try:
             while fvs.more():
                 frame = fvs.read()
+                frames += 1
+                total_frames += 1
 
                 # frame = cv2.resize(frame, (608, 608), interpolation=cv2.INTER_LINEAR)
                 # frame = cv2.hconcat([frame, frame, frame])
@@ -142,7 +144,7 @@ class VideoDetector:
                     hold_detections = detections
                     frames = 0
 
-                if hold_detections is not None:
+                if len(hold_detections) != 0:
                     if self.tracker is not None:
                         image, plane, plane_mask = self.label_drawer.draw_labels_by_trackers(frame,
                                                                                              hold_detections,
@@ -156,9 +158,6 @@ class VideoDetector:
 
                 # RGB -> BGR
                 result = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-                frames += 1
-                total_frames += 1
 
                 curr_time = time.time()
                 exec_time = curr_time - prev_time

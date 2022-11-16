@@ -2,6 +2,7 @@
 .idea/
 data/custom2
 data/custom2
+data/frames
 data/*.flv
 data/*.yuv
 data/*.avi
