@@ -81,7 +81,7 @@ class DeepSort(object):
         for idx, track in enumerate(valid_tracks):
             x1, y1, x2, y2 = boxes[idx]
             track_id = track.track_id
-            class_id = track.payload
+            class_id = track.payload.cpu()
             outputs.append([x1, y1, x2, y2, track_id, class_id])
         if len(outputs) > 0:
             outputs = np.array(outputs, dtype=np.int32)

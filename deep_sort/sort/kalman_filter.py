@@ -183,14 +183,14 @@ class KalmanFilter:
 
         # Unfortunately, cholesky will randomly throw CUDA ERROR under linux GPU environment,
         # this error is from pytorch1.2 to 1.5
-        # chol_factor = torch.cholesky(projected_cov, upper=False)
-        # kalman_gain = torch.cholesky_solve(torch.matmul(covariance, self._update_mat).permute(0, 2, 1),
-        #                                    chol_factor,
-        #                                    upper=False).permute(0, 2, 1)
+        chol_factor = torch.linalg.cholesky(projected_cov, upper=False)
+        kalman_gain = torch.cholesky_solve(torch.matmul(covariance, self._update_mat).permute(0, 2, 1),
+                                           chol_factor,
+                                           upper=False).permute(0, 2, 1)
 
         # The alternative solution is theoretically slower than cholesky_solve
-        kalman_gain = torch.solve(torch.matmul(covariance, self._update_mat).permute(0, 2, 1), projected_cov)[
-            0].permute(0, 2, 1)
+        # kalman_gain = torch.solve(torch.matmul(covariance, self._update_mat).permute(0, 2, 1), projected_cov)[
+        #     0].permute(0, 2, 1)
 
         # (*, 4)
         innovation = measurement.view(-1, 4) - projected_mean

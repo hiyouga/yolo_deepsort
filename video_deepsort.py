@@ -10,8 +10,8 @@ if __name__ == '__main__':
     LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
-    model = Darknet("config/yolov4.cfg", img_size=(608, 608))
-    model.load_darknet_weights("weights/yolov4.weights")
+    model = Darknet("config/yolov3-tiny.cfg", img_size=(608, 608))
+    model.load_darknet_weights("weights/yolov3-tiny.weights")
     model.to("cuda:0")
 
     # 跟踪器
@@ -39,14 +39,14 @@ if __name__ == '__main__':
                                    thickness=2,
                                    skip_frames=2,
                                    thres=0.5,
-                                   class_mask=[0, 2, 4],
+                                   class_mask=[0],
                                    nms_thres=0.4,
                                    tracker=tracker,
                                    half=True)
 
-    for image, detections, _ in video_detector.detect(0,
-                                                      # output_path="../data/output.ts",
-                                                      real_show=True,
+    for image, detections, _ in video_detector.detect('data/test.flv',
+                                                      real_show=False,
                                                       skip_secs=0):
-        # print(detections)
+        print(image)
+        print(detections)
         pass

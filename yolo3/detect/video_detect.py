@@ -21,7 +21,6 @@ def alpha_composite(img, plane):
     if plane is None:
         return img
     else:
-
         base = Image.fromarray(img)
         base = base.convert("RGBA")
         out = Image.alpha_composite(base, plane).convert("RGB")

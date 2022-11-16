@@ -168,7 +168,6 @@ class LabelDrawer:
         if only_rect:
             draw_rects(img, detections, self.colors, self.thickness)
         else:
-
             labels = []
             for detection in detections:
                 if self.id2label is not None and str(int(detection[4])) in self.id2label:
