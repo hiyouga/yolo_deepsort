@@ -1,6 +1,5 @@
 import logging
-import cv2
-
+import numpy as np
 from deep_sort import DeepSort
 from yolo3.detect.video_detect import VideoDetector
 from yolo3.models import Darknet
@@ -24,15 +23,19 @@ if __name__ == '__main__':
 
     video_detector = VideoDetector(model, "config/coco.names",
                                    thickness=2,
-                                   skip_frames=10,
+                                   skip_frames=-1,
                                    thres=0.5,
                                    class_mask=[0],
                                    nms_thres=0.4,
                                    tracker=tracker,
                                    half=True)
 
-    for i, (image, detections, video_time, real_time) in enumerate(video_detector.detect('data/test.flv',
+    filename = 'data/a.csv'
+    counts = list()
+    for i, (image, detections, video_time, real_time) in enumerate(video_detector.detect('data/a.mp4',
+                                                                                         output_path='data/a.ts',
                                                                                          real_show=False,
                                                                                          skip_secs=0)):
-        cv2.imwrite('data/frames/{}.jpg'.format(i), image)
-        print(len(detections), video_time, real_time) # number of people
+        # cv2.imwrite('data/frames/{}.jpg'.format(i), image)
+        counts.append(len(detections))
+    np.savetxt(filename, counts, fmt='%d', encoding='utf-8')

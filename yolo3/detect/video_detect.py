@@ -110,12 +110,13 @@ class VideoDetector:
         hold_detections = []
 
         frames = 0
-        total_frames = 0
+        cur_frame = 0
         try:
             while fvs.more():
                 frame = fvs.read()
                 frames += 1
-                total_frames += 1
+                cur_frame += 1
+                print("{}/{}".format(cur_frame, total_frames))
 
                 # frame = cv2.resize(frame, (608, 608), interpolation=cv2.INTER_LINEAR)
                 # frame = cv2.hconcat([frame, frame, frame])
@@ -182,7 +183,7 @@ class VideoDetector:
                 if isOutput:
                     out.write(result)
 
-                video_time = total_frames / video_fps
+                video_time = cur_frame / video_fps
                 real_time = time.time() - start_time
                 yield result, hold_detections, video_time, real_time
 
